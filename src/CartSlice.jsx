@@ -2,8 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const CartSlice = createSlice({
   name: "cart",
+
   initialState: {
     items: [], // Initialize items as an empty array
+    totalQuantity: 0,
+    totalAmount: 0,
   },
   reducers: {
     addItem: (state, action) => {
@@ -14,6 +17,14 @@ export const CartSlice = createSlice({
       } else {
         state.items.push({ name, image, cost, quantity: 1 });
       }
+      state.totalQuantity = state.items.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.totalAmount = state.items.reduce(
+        (total, item) => total + item.quantity * item.cost,
+        0
+      );
     },
     removeItem: (state, action) => {
       const { name } = action.payload;
@@ -21,13 +32,30 @@ export const CartSlice = createSlice({
       if (index !== -1) {
         state.items.splice(index, 1);
       }
+      state.totalQuantity = state.items.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.totalAmount = state.items.reduce(
+        (total, item) => total + item.quantity * item.cost,
+        0
+      );
     },
     updateQuantity: (state, action) => {
       const { name, quantity } = action.payload;
       const item = state.items.find((item) => item.name === name);
+
       if (item) {
         item.quantity = quantity;
       }
+      state.totalQuantity = state.items.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.totalAmount = state.items.reduce(
+        (total, item) => total + item.quantity * item.cost,
+        0
+      );
     },
   },
 });

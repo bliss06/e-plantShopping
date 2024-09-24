@@ -172,7 +172,9 @@ body {
   /* background-color: red; */
   margin-left: 27px;
   position: absolute;
-  font-size: 29px;
+  font-size: 72px;
+  font-weight: bold;
+  color: white;
 }
 .plantname_heading {
   display: flex;
