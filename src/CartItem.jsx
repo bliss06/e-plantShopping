@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeItem, updateQuantity } from "./CartSlice";
 import "./CartItem.css";
 
-const CartItem = ({ onContinueShopping }) => {
+const CartItem = ({ onRemoveProduct, onContinueShopping }) => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
@@ -24,6 +24,15 @@ const CartItem = ({ onContinueShopping }) => {
       onContinueShopping();
     }
   };
+
+  //Call the parent component function to update the added to cart flag
+  const handleRemoveFromCart = (itemName) => {
+    console.log("Removing item from cart: ", itemName);
+    if (onRemoveProduct) {
+      onRemoveProduct(itemName);
+    }
+  };
+
   const handleCheckoutShopping = (e) => {
     alert("Functionality to be added for future reference");
   };
@@ -35,10 +44,17 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
   const handleDecrement = (item) => {
+    if (item.quantity === 0) {
+      return;
+    }
+    if (item.quantity === 1) {
+      handleRemoveFromCart(item.name);
+    }
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
   };
 
   const handleRemove = (item) => {
+    handleRemoveFromCart(item.name);
     dispatch(removeItem({ name: item.name }));
   };
 

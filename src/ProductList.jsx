@@ -15,12 +15,24 @@ function ProductList() {
   const dispatch = useDispatch();
 
   const handleAddToCart = (product) => {
+    if (isProductInCart(product.name)) {
+      return;
+    }
     dispatch(addItem(product));
     setAddedToCart((prevState) => ({
       ...prevState,
       [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
     }));
     setTotalQuantity(totalQuantity + 1);
+  };
+  const updateAddedToCart = (productName) => {
+    // Update the addedToCart state to remove the product from the cart from cart screen
+    //check if the passed productName is in the addedToCart state, if so change it
+    //This fn is passed as a prop to child component to update the addedToCart state
+    setAddedToCart((prevState) => ({
+      ...prevState,
+      [productName]: false, // Set the product name as key and value as false to indicate it's removed from cart
+    }));
   };
 
   const isProductInCart = (productName) => {
@@ -392,6 +404,7 @@ function ProductList() {
                     </div>
                     <div className="product-price">{plant.cost}</div>
                     <button
+                      // disabled={isProductInCart(plant.name) ? "true" : "false"}
                       className={
                         isProductInCart(plant.name)
                           ? "product-button added-to-cart"
@@ -399,7 +412,9 @@ function ProductList() {
                       }
                       onClick={() => handleAddToCart(plant)}
                     >
-                      Add to Cart
+                      {isProductInCart(plant.name)
+                        ? "Added to Cart"
+                        : "Add to Cart"}
                     </button>
                   </div>
                 ))}
@@ -408,7 +423,10 @@ function ProductList() {
           ))}
         </div>
       ) : (
-        <CartItem onContinueShopping={handleContinueShopping} />
+        <CartItem
+          onRemoveProduct={updateAddedToCart}
+          onContinueShopping={handleContinueShopping}
+        />
       )}
     </div>
   );
