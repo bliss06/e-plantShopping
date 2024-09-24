@@ -402,7 +402,7 @@ function ProductList() {
                     <div className="product-description">
                       {plant.description}
                     </div>
-                    <div className="product-price">{plant.cost}</div>
+                    <div className="product-price">${plant.cost}</div>
                     <button
                       // disabled={isProductInCart(plant.name) ? "true" : "false"}
                       className={
